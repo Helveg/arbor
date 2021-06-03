@@ -87,9 +87,9 @@ DERIVATIVE states {
     m' = (minf-m)/taum
 }
 
-FUNCTION ghk( v (mV), ci (mM), co (mM), z )  (coulombs/cm3) {
+FUNCTION ghk( v (mV), ci (mM), co (mM), z)  (coulombs/cm3) {
     E = (1e-3) * v
-      zeta = (z*F*E)/(R*T)
+    zeta = (z*F*E)/(R*T)
 
     if ( fabs(1-exp(-zeta)) < 1e-6 ) {
         ghk = (1e-6) * (z*F) * (ci - co*exp(-zeta)) * (1 + zeta/2)
@@ -99,13 +99,11 @@ FUNCTION ghk( v (mV), ci (mM), co (mM), z )  (coulombs/cm3) {
 }
 
 PROCEDURE rates( v (mV), cai, cao ) {
-
     minf = 1 / ( 1 + exp(-(v-vhalfm-vshift)/cvm) )
-
     taum = taumfkt(v-vshift)/qt
-
     gk = ghk(v-vshift, cai, cao, 2)
 }
+
 
 
 FUNCTION kelvinfkt( t (degC) )  (kelvin) {
