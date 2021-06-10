@@ -33,7 +33,7 @@ bool notification_queue::try_push(task& tsk) {
     {
         lock q_lock{q_mutex_, std::try_to_lock};
         if (!q_lock) return false;
-        q_tasks_.push_back(std::move(tsk));
+        q_tasks_.push_front(std::move(tsk));
         tsk = 0;
     }
     q_tasks_available_.notify_all();
@@ -43,7 +43,7 @@ bool notification_queue::try_push(task& tsk) {
 void notification_queue::push(task&& tsk) {
     {
         lock q_lock{q_mutex_};
-        q_tasks_.push_back(std::move(tsk));
+        q_tasks_.push_front(std::move(tsk));
     }
     q_tasks_available_.notify_all();
 }

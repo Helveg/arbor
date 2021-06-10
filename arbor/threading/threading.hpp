@@ -222,9 +222,15 @@ public:
 struct parallel_for {
     template <typename F>
     static void apply(int left, int right, task_system* ts, F f) {
+        int batch_size = ((right-left)/ts->get_num_threads())/10 + 1;
         task_group g(ts);
-        for (int i = left; i < right; ++i) {
-          g.run([=] {f(i);});
+        for (int i = left; i < right; i+=batch_size) {
+          g.run([=] {
+                int r = i+batch_size < right ? i+batch_size: right;
+                for (int j = i; j < r; ++j) {
+                    f(j);
+                }
+            });
         }
         g.wait();
     }
